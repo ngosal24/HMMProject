@@ -141,8 +141,6 @@ top_n_variables
 
 # We finalize Global_active_power, Global_intensity and Sub_metering_3 as our 3 response variables
 
-# ------------------------------------------------------------------------------------------------------------------------------------
-# Q2:
 
 # the day is chosen randomly so as to not introduce any bias into our model by making a selection
 # randomly chosen day of the week:
