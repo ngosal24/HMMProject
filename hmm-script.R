@@ -14,6 +14,8 @@ getwd()
 setwd ("C:/Users/navra/OneDrive/Documents/SFU Fall 2023/CMPT318/Group Project")
 data <- read.table("TermProjectData.txt", header=TRUE, sep=",")
 
+# SECTION 1: CLEANING ---------------------------------------------------------------
+
 #Test for null values:
 any(is.na(data$Date))
 any(is.na(data$Time))
@@ -60,6 +62,8 @@ remove(stand_data)
 split = sample.split(scaled_data, SplitRatio = .8)
 Training_set = subset(scaled_data, split == TRUE)
 Test_set = subset(scaled_data, split == FALSE)
+
+# SECTION 2: PCA AND SELECTION ---------------------------------------------------------------
 
 # PCA. 
 pca <- prcomp(Training_set[4:10],center = TRUE)
@@ -164,13 +168,13 @@ end_time <- as.POSIXct("20:00:00", format = "%H:%M:%S")
 Train_data <- filtered_data[(as.POSIXct(filtered_data$Time, format = "%H:%M:%S")) >= start_time & 
                               (as.POSIXct(filtered_data$Time, format = "%H:%M:%S")) <= end_time, ]
 
-
-# determine ntimes
-times <- aggregate(Date~Time, Train_data, FUN=length)$Date
-
 # Keep only the data with our 3 response variables for the model
 Train_data <- Train_data[c("Global_active_power", "Global_intensity", "Sub_metering_3")];
 
+# # SECTION 3: CREATING MODEL ---------------------------------------------------------------
+
+# determine ntimes
+times <- aggregate(Date~Time, Train_data, FUN=length)$Date
 
 set.seed(3)
 # Test model here: tests done for models with various nstates; found that it will not converge for nstates > 10
@@ -216,8 +220,8 @@ logLik_values
 # We see higher logLik values at nstates = 9 and nstates = 10, but will keep nstates = 8 in case of overfitting
 # We see signs of overfitting as logLik decreases from nstates = 9 to nstates = 10
 
-# Test data:
 
+# SECTION 4: TESTING MODEL ---------------------------------------------------------------
 
 # Get ntimes
 newTimes <- aggregate(Date~Time, Test_set, FUN=length)$Date
@@ -271,8 +275,9 @@ nlogLikTest10
 
 # From the results, we see that nstates = 9 returns the highest normalized log-likelihood values for the train and the test data
 # therefore, we will use it as our final model
-# -------------------------------------------------------------------------------------------------------------------------------------
-# Q3:
+
+# SECTION 5: FINDING ANOMALIES ---------------------------------------------------------------
+# We have 3 datasets with injected anomalies. Let's find out how well the model can detect them.
 
 # import anomaly datasets
 anomaly1 <- read.table("DataWithAnomalies1.txt", header=TRUE, sep=",")
