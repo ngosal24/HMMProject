@@ -10,4 +10,4 @@
 
 
 
-# All code has been organized into one script with sections and commentary. Final report is attached in a seperate file.
+All code has been organized into one script with sections and commentary. Final report is attached in a seperate file.
